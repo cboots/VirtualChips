@@ -6,7 +6,7 @@ public class ChipStack {
 	};
 
 	public final static int NUM_COLORS = 5;
-	int[] mChips = null;
+	protected int[] mChips = null;
 
 	public ChipStack() {
 		mChips = new int[NUM_COLORS];
@@ -20,6 +20,14 @@ public class ChipStack {
 		mChips = new int[NUM_COLORS];
 		for (int i = 0; i < NUM_COLORS; i++) {
 			mChips[i] = chips[i];
+		}
+	}
+	
+	public ChipStack(ChipStack old)
+	{
+		mChips = new int[NUM_COLORS];
+		for (int i = 0; i < NUM_COLORS; i++) {
+			mChips[i] = old.mChips[i];
 		}
 	}
 
@@ -69,5 +77,26 @@ public class ChipStack {
 
 	public int getCount(int idx) {
 		return mChips[idx];
+	}
+	
+	public ChipStack copy()
+	{
+		ChipStack copy = new ChipStack(this);
+		return copy;
+	}
+	
+	/*
+	 * Returns true if stacks have the same quantity of each denomination
+	 * Does not check for equivalent value.
+	 */
+	public boolean stacksMatch(ChipStack other)
+	{
+		for(int i = 0; i < NUM_COLORS; i++)
+		{
+			if(other.mChips[i] != mChips[i])
+				return false;
+		}
+		
+		return true;
 	}
 }
