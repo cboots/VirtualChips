@@ -171,6 +171,51 @@ public class ChipStackManipulationTest extends
     	}
     }
     
+    public void testCopyStack()
+    {
+    	ChipStack org = new ChipStack(new int[]{5, 10, 15, 20, 25});
+    	ChipStack copy = new ChipStack(org);
+    	
+    	//Test copy
+    	for(int i = 0; i < ChipStack.NUM_COLORS; i++)
+    	{
+    		assertEquals(org.getCount(i), copy.getCount(i));
+    	}
+    	
+    	//Test deep copy
+    	assertNotSame(org, copy);
+    	copy.AddChips(0, 10);
+    	assertEquals(15, copy.getCount(0));
+    	assertFalse(15 == org.getCount(0));
+    }
     
+    public void testCopyStackMethod()
+    {
+    	ChipStack org = new ChipStack(new int[]{5, 10, 15, 20, 25});
+    	ChipStack copy = org.copy();;
+    	
+    	//Test copy
+    	for(int i = 0; i < ChipStack.NUM_COLORS; i++)
+    	{
+    		assertEquals(org.getCount(i), copy.getCount(i));
+    	}
+    	
+    	//Test deep copy
+    	assertNotSame(org, copy);
+    	copy.AddChips(0, 10);
+    	assertEquals(15, copy.getCount(0));
+    	assertFalse(15 == org.getCount(0));
+    }
+    
+    public void testStacksEqual()
+    {
+    	ChipStack stack1 = new ChipStack(new int[]{10, 15, 25, 30, 1});
+    	ChipStack stack2 = new ChipStack(stack1);
+    	ChipStack stack3 = new ChipStack(new int[]{10, 10, 25, 30, 1});
+    	
+    	assertTrue(stack1.stacksMatch(stack2));
+    	assertFalse(stack2.stacksMatch(stack3));
+    	
+    }
     
 }
