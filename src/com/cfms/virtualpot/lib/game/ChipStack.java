@@ -28,11 +28,11 @@ public class ChipStack {
 	}
 
 	public void AddChips(int cidx, int quantity) {
-		if (quantity < 0) {
-			throw new IllegalArgumentException("Cannot add negative chips");
-		}
 		if (cidx < 0 || cidx >= NUM_COLORS) {
 			throw new IllegalArgumentException("Color index out of range");
+		}
+		if (quantity < 0) {
+			throw new IllegalArgumentException("Cannot add negative chips");
 		}
 		mChips[cidx] += quantity;
 	}
@@ -48,11 +48,11 @@ public class ChipStack {
 	}
 
 	public void RemoveChips(int cidx, int quantity) {
-		if (mChips[cidx] < quantity) {
-			throw new IllegalArgumentException("Not enough chips left");
-		}
 		if (cidx < 0 || cidx >= NUM_COLORS) {
 			throw new IllegalArgumentException("Color index out of range");
+		}
+		if (mChips[cidx] < quantity) {
+			throw new IllegalArgumentException("Not enough chips left");
 		}
 		mChips[cidx] -= quantity;
 	}
