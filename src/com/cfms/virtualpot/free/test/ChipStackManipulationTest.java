@@ -82,4 +82,95 @@ public class ChipStackManipulationTest extends
     	assertEquals(5, stack.getCount(Color.BLACK));	
     }
 
+    public void testAddStack()
+    {
+    	ChipStack stack = new ChipStack(new int[]{50, 5, 10, 15, 20});
+    	ChipStack stack2 = new ChipStack(new int[]{5, 10, 15, 25, 0});
+    	stack.AddChips(stack2);
+    	assertEquals(55, stack.getCount(0));
+    	assertEquals(15, stack.getCount(1));
+    	assertEquals(25, stack.getCount(2));
+    	assertEquals(40, stack.getCount(3));
+    	assertEquals(20, stack.getCount(4));
+    }
+    
+
+    public void testRemoveStack()
+    {
+    	ChipStack stack = new ChipStack(new int[]{50, 25, 20, 25, 20});
+    	ChipStack stack2 = new ChipStack(new int[]{5, 10, 15, 25, 0});
+    	stack.RemoveChips(stack2);
+    	assertEquals(45, stack.getCount(0));
+    	assertEquals(15, stack.getCount(1));
+    	assertEquals( 5, stack.getCount(2));
+    	assertEquals( 0, stack.getCount(3));
+    	assertEquals(20, stack.getCount(4));
+    }
+    
+    public void testRemoveTooMany()
+    {
+    	ChipStack stack = new ChipStack();
+    	try{
+    		stack.RemoveChips(0, 10);
+    		fail("Exception should have been thrown.");
+    	}catch(IllegalArgumentException ex)
+    	{
+    		
+    	}catch(Exception e)
+    	{
+    		fail("Unknown Exception Thrown");
+    	}
+    }
+    
+
+    public void testIndexOutOfRangeException()
+    {
+    	ChipStack stack = new ChipStack();
+    	try{
+    		stack.RemoveChips(-1, 0);
+    		fail("Exception should have been thrown.");
+    	}catch(IllegalArgumentException ex)
+    	{
+    		
+    	}catch(Exception e)
+    	{
+    		fail("Unknown Exception Thrown");
+    	}
+    	
+    	try{
+    		stack.RemoveChips(ChipStack.NUM_COLORS, 0);
+    		fail("Exception should have been thrown.");
+    	}catch(IllegalArgumentException ex)
+    	{
+    		
+    	}catch(Exception e)
+    	{
+    		fail("Unknown Exception Thrown");
+    	}
+    	
+    	try{
+    		stack.AddChips(-1, 0);
+    		fail("Exception should have been thrown.");
+    	}catch(IllegalArgumentException ex)
+    	{
+    		
+    	}catch(Exception e)
+    	{
+    		fail("Unknown Exception Thrown");
+    	}
+    	
+    	try{
+    		stack.AddChips(ChipStack.NUM_COLORS, 0);
+    		fail("Exception should have been thrown.");
+    	}catch(IllegalArgumentException ex)
+    	{
+    		
+    	}catch(Exception e)
+    	{
+    		fail("Unknown Exception Thrown");
+    	}
+    }
+    
+    
+    
 }
