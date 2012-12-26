@@ -1,6 +1,6 @@
 package com.cfms.virtualpot.lib.game;
 
-public class Stack {
+public class ChipStack {
 	public static enum Color {
 		WHITE, RED, BLUE, GREEN, BLACK
 	};
@@ -8,11 +8,11 @@ public class Stack {
 	public final static int NUM_COLORS = 5;
 	int[] mChips = null;
 
-	public Stack() {
+	public ChipStack() {
 		mChips = new int[NUM_COLORS];
 	}
 
-	public Stack(int[] chips) {
+	public ChipStack(int[] chips) {
 		if (chips.length != NUM_COLORS) {
 			throw new IllegalArgumentException(
 					"Incorrect Array Size, must be NUM_COLORS");
@@ -37,7 +37,7 @@ public class Stack {
 		mChips[cidx] += quantity;
 	}
 
-	public void AddChips(Stack other) {
+	public void AddChips(ChipStack other) {
 		for (int i = 0; i < NUM_COLORS; i++) {
 			AddChips(i, other.getCount(i));
 		}
@@ -57,7 +57,7 @@ public class Stack {
 		mChips[cidx] -= quantity;
 	}
 
-	public void RemoveChips(Stack remove) {
+	public void RemoveChips(ChipStack remove) {
 		for (int i = 0; i < NUM_COLORS; i++) {
 			RemoveChips(i, remove.getCount(i));
 		}
