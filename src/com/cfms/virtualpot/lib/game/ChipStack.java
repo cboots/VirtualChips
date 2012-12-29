@@ -143,4 +143,48 @@ public class ChipStack {
 		from.RemoveChips(transferStack);
 		to.AddChips(transferStack);
 	}
+	
+	public void makeChange(double[] chipVals, Color breakColor)
+	{
+		makeChange(chipVals, breakColor.ordinal());
+	}
+	
+	public void makeChange(double[] chipVals, int breakCidx)
+	{
+		makeChange(chipVals, breakCidx, mChips[breakCidx]);
+	}
+	
+	public void makeChange(double[] chipVals, Color breakColor, int quantity)
+	{
+		makeChange(chipVals, breakColor.ordinal(), quantity);
+		
+	}
+	
+	public void makeChange(double[] chipVals, int breakCidx, int quantity)
+	{
+		makeChange(chipVals, breakCidx, quantity, breakCidx - 1);
+	}
+
+	public void makeChange(double[] chipVals, Color breakColor, int quantity, Color changeColor)
+	{
+		makeChange(chipVals, breakColor.ordinal(), quantity, changeColor.ordinal());
+	}
+	
+	public void makeChange(double[] chipVals, int breakCidx, int quantity, int changeCidx)
+	{
+		this.RemoveChips(breakCidx, quantity);
+		double quota = chipVals[breakCidx] * quantity;
+		for(int c = changeCidx; c >= 0; c--)
+		{
+			int change = (int) (quota / chipVals[c]);
+			quota -= change*chipVals[c];
+			this.AddChips(c, change);
+			
+			//If we've made all the change we need, quit
+			if(quota == 0)
+				break;
+		}
+	}
+	
+	
 }

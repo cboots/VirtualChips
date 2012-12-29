@@ -74,7 +74,7 @@ public class Pot extends ChipStack {
 									TransferChips(this, splits[i], change, transfer);
 								}
 							}
-							
+							//If we've made all the change we need, quit
 							if(quota == 0)
 								break;
 						}
@@ -86,7 +86,8 @@ public class Pot extends ChipStack {
 					if(c == 0)
 						break;
 					
-					throw new IllegalArgumentException("Change not implemented");
+					//Make change from current denomination
+					this.makeChange(chipVals, c);
 				}	
 			}
 			
