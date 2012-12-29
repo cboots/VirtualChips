@@ -91,12 +91,56 @@ public class ChipStack {
 	 */
 	public boolean stacksMatch(ChipStack other)
 	{
+		return stacksMatch(other.mChips);
+	}
+	
+	/*
+	 * Returns true if stacks have the same quantity of each denomination
+	 * Does not check for equivalent value.
+	 */
+	public boolean stacksMatch(int[] otherChips)
+	{
 		for(int i = 0; i < NUM_COLORS; i++)
 		{
-			if(other.mChips[i] != mChips[i])
+			if(otherChips[i] != mChips[i])
 				return false;
 		}
 		
 		return true;
+	}
+	
+	public double getValue(double[] chipVals)
+	{
+		double value = 0;
+		if(chipVals.length != NUM_COLORS)
+		{
+			throw new IllegalArgumentException("chipVals array the wrong length. Must be NUM_COLORS long.");
+		}
+		
+		for(int i = 0; i < NUM_COLORS; i++)
+		{
+			value += chipVals[i]*mChips[i];
+		}
+		
+		return value;
+	}
+	
+	public static void TransferChips(ChipStack from, ChipStack to, Color color, int quantity)
+	{
+		from.RemoveChips(color, quantity);
+		to.AddChips(color, quantity);
+	}
+	
+	public static void TransferChips(ChipStack from, ChipStack to, int cidx, int quantity)
+	{
+		from.RemoveChips(cidx, quantity);
+		to.AddChips(cidx, quantity);
+	}
+	
+	public static void TransferChips(ChipStack from, ChipStack to, int[] transfer)
+	{
+		ChipStack transferStack = new ChipStack(transfer);
+		from.RemoveChips(transferStack);
+		to.AddChips(transferStack);
 	}
 }

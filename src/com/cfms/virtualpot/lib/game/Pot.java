@@ -1,98 +1,100 @@
 package com.cfms.virtualpot.lib.game;
 
-import com.cfms.virtualpot.lib.game.ChipStack.Color;
+public class Pot extends ChipStack {
 
-
-public class Pot {
-	//Pot does not keep track of side pots, game handles that
-	ChipStack[] mPlayerPots = null; 
-	
-	
-	public Pot(int numPlayers)
-	{
-		mPlayerPots = new ChipStack[numPlayers];	
-		for(int i = 0; i < numPlayers; i++)
-		{
-			mPlayerPots[i] = new ChipStack();
-		}
+	public Pot() {
+		super();
 	}
 
-	public int getPlayerCount()
-	{
-		if(mPlayerPots == null)
-			return 0;
-		
-		return mPlayerPots.length;
-	}
-	
-	public int getCount(Color c) {
-		int count = 0;
-		for(int i = 0; i < this.getPlayerCount(); i++)
-		{
-			count += mPlayerPots[i].getCount(c);
-		}
-		
-		return count;
+	public Pot(int[] chips) {
+		super(chips);
 	}
 
-	public int getCount(int cidx) {
-		int count = 0;
-		for(int i = 0; i < this.getPlayerCount(); i++)
-		{
-			count += mPlayerPots[i].getCount(cidx);
-		}
-		
-		return count;
-	}
-	
-	public int getCount(Color c, int player) {
-		return mPlayerPots[player].getCount(c);
+	public Pot(ChipStack old) {
+		super(old);
 	}
 
-	public int getCount(int cidx, int player) {
-		return mPlayerPots[player].getCount(cidx);
-	}
-	
 	/*
-	 * 
+	 * Splits the pot according to the given scheme. chipVals - array of chip
+	 * values (see TableStakes) ways - an array of proportional measures of how
+	 * to split pot. Example {1, 1} indicates the pot is evenly split into 2 {2,
+	 * 1, 1} indicates the pot is to be split three ways, half to the first
+	 * player, a quarter to each of the next two players Returns array of
+	 * ChipStacks in the same order as as 'ways' with an extra entry for odd change
+	 * Game will decide what to do with change
 	 */
-	public ChipStack getPlayerPot(int player)
-	{
-		return mPlayerPots[player];
+	public ChipStack[] splitPot(int[] ways, double[] chipVals) {
+		ChipStack[] splits = new ChipStack[ways.length+1];
+
+		for (int i = 0; i < ways.length; i++) {
+			splits[i] = new ChipStack();
+		}
+
+		int totalWays = 0;
+		for (int i = 0; i < ways.length; i++) {
+			totalWays += ways[i];
+		}
+
+		// Split chips evenly as much as possible
+		// Go from top denomination and make change
+		for (int c = NUM_COLORS - 1; c >= 0; c--) {
+			int count = this.getCount(c);
+			int split = count / totalWays;
+			int remainder = count % totalWays;
+			for (int i = 0; i < ways.length; i++) {
+				// Transfer the chips from pot to the split
+				ChipStack.TransferChips(this, splits[i], c, split * ways[i]);
+			}
+			
+			//If non-zero remainder, Try to make change from lower denominations
+			if(remainder > 0)
+			{
+				if(this.getValue(chipVals) > totalWays * chipVals[c])
+				{
+					//Enough remaining for even split this round
+					for(int i = 0; i < ways.length; i++)
+					{
+						//Value that must be filled for this split
+						double quota = ways[i] * chipVals[c];
+						//Subtracting from highest denominations first, fill quota
+						for(int change = c; change >= 0; change--)
+						{
+							if(mChips[change] > 0)
+							{
+								//Subtract as much as possible or needed
+								if(quota >= mChips[change]*chipVals[change])
+								{
+									//All chips of denomination [change] are needed to fill quota
+									quota -= mChips[change]*chipVals[change];
+									TransferChips(this, splits[i], change, mChips[change]);
+								}else{
+									//More than we need. Take only what we must
+									int transfer = (int) (quota / chipVals[change]);
+									quota -= transfer*chipVals[change];
+									TransferChips(this, splits[i], change, transfer);
+								}
+							}
+							
+							if(quota == 0)
+								break;
+						}
+					}
+					
+				}
+				else{
+					//If lowest denomination, leave as remainder.
+					if(c == 0)
+						break;
+					
+					throw new IllegalArgumentException("Change not implemented");
+				}	
+			}
+			
+		}
+
+		//Return odds as is in last split
+		splits[ways.length] = new ChipStack(this);
+		return splits;
 	}
-	
-	public ChipStack getPlayerPotCopy(int player)
-	{
-		return new ChipStack(mPlayerPots[player]);
-	}
-	
-	public void addPlayerChips(int player, Color c, int quantity)
-	{
-		mPlayerPots[player].AddChips(c, quantity);
-	}
-	
-	public void addPlayerChips(int player, int cidx, int quantity)
-	{
-		mPlayerPots[player].AddChips(cidx, quantity);
-	}
-	
-	public void addPlayerChips(int player, ChipStack stack)
-	{
-		mPlayerPots[player].AddChips(stack);
-	}
-	
-	public void removePlayerChips(int player, Color c, int quantity)
-	{
-		mPlayerPots[player].RemoveChips(c, quantity);
-	}
-	
-	public void removePlayerChips(int player, int cidx, int quantity)
-	{
-		mPlayerPots[player].RemoveChips(cidx, quantity);
-	}
-	
-	public void removePlayerChips(int player, ChipStack stacks)
-	{
-		mPlayerPots[player].RemoveChips(stacks);
-	}
+
 }
