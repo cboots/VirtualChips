@@ -234,4 +234,33 @@ public class ChipStackManipulationTest extends TestCase {
     	
     }
     
+    public void testMakeChange()
+    {
+
+    	ChipStack stack = new ChipStack(new int[]{0, 10, 1, 2, 1});
+    	double value = stack.getValue(new double[]{1, 5, 10, 25, 100});
+    	
+    	stack.makeChange(new double[]{1, 5, 10, 25, 100}, Color.RED, 2);//10, 8, 1, 2, 1
+    	
+    	//Exchange all Black for Green
+    	stack.makeChange(new double[]{1, 5, 10, 25, 100}, Color.BLACK);//10, 8, 1, 6, 0
+    	stack.makeChange(new double[]{1, 5, 10, 25, 100}, Color.GREEN, 1, Color.RED);//10, 13, 1, 5, 0
+    	
+    	assertTrue(stack.stacksMatch(new int[]{10, 13, 1, 5, 0}));
+    	assertEquals(value, stack.getValue(new double[]{1, 5, 10, 25, 100}));
+    }
+
+    public void testMakeChangeNotDivisible()
+    {
+
+    	ChipStack stack = new ChipStack(new int[]{0, 0, 0, 10, 0});
+    	double value = stack.getValue(new double[]{1, 2, 5, 25, 100});
+    	
+    	stack.makeChange(new double[]{1, 2, 5, 25, 100}, Color.GREEN, 1, Color.RED);//1, 12, 0, 9, 0
+    	
+    	assertTrue(stack.stacksMatch(new int[]{1, 12, 0, 9, 0}));
+    	assertEquals(value, stack.getValue(new double[]{1, 2, 5, 25, 100}));
+    }
+    
+    
 }

@@ -111,6 +111,24 @@ public class PotManipulationTest extends TestCase {
     	assertTrue(splits[3].stacksMatch(new int[]{0, 0, 0, 0, 0}));	
     }
     
+
     
+
+    public void testSplitPotTwoWaysChange()
+    {
+    	Pot pot = new Pot(new int[]{1, 3, 1, 0, 0});
+    	ChipStack halfPot0 = new ChipStack(new int[]{3, 0, 1, 0, 0});
+    	ChipStack halfPot1 = new ChipStack(new int[]{3, 2, 0, 0, 0});
+    	
+    	TableStakes stakes = new TableStakes();
+    	
+    	ChipStack[] splits = pot.splitPot(new int[]{1, 1}, stakes.getChipValues());
+    	
+    	assertEquals(3, splits.length);
+    	assertTrue(halfPot0.stacksMatch(splits[0]));
+    	assertTrue(halfPot1.stacksMatch(splits[1]));
+    	assertTrue(splits[2].stacksMatch(new int[]{0, 0, 0, 0, 0}));
+    	
+    }
     
 }
