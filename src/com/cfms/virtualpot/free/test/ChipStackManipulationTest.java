@@ -1,28 +1,12 @@
 package com.cfms.virtualpot.free.test;
 
-import android.test.ActivityInstrumentationTestCase2;
+import junit.framework.TestCase;
 
-import com.cfms.virtualpot.lib.activity.*;
-import com.cfms.virtualpot.lib.game.*;
+import com.cfms.virtualpot.lib.game.ChipStack;
 import com.cfms.virtualpot.lib.game.ChipStack.Color;
 
-public class ChipStackManipulationTest extends
-		ActivityInstrumentationTestCase2<PokerActivity> {
+public class ChipStackManipulationTest extends TestCase {
 
-	PokerActivity mActivity;
-	
-	public ChipStackManipulationTest()
-	{
-		super(PokerActivity.class);
-	}
-	
-    @Override
-    protected void setUp() throws Exception {
-    	super.setUp();
-        mActivity = this.getActivity();
-        
-    }
-    
     public void testCreateEmptyStack()
     {
     	ChipStack stack = new ChipStack();
@@ -215,6 +199,38 @@ public class ChipStackManipulationTest extends
     	
     	assertTrue(stack1.stacksMatch(stack2));
     	assertFalse(stack2.stacksMatch(stack3));
+    	
+    }
+    
+    public void testTransferStacks()
+    {
+    	ChipStack stack = new ChipStack(new int[]{50, 25, 20, 25, 20});
+    	ChipStack stack2 = new ChipStack(new int[]{5, 10, 15, 25, 0});
+    	
+    	ChipStack.TransferChips(stack, stack2, 0, 40);
+    	ChipStack.TransferChips(stack, stack2, Color.RED, 15);
+    	ChipStack.TransferChips(stack, stack2, new int[]{0, 0, 20, 25, 20});
+    	
+    	
+    	assertEquals(10, stack.getCount(0));
+    	assertEquals(10, stack.getCount(1));
+    	assertEquals( 0, stack.getCount(2));
+    	assertEquals( 0, stack.getCount(3));
+    	assertEquals( 0, stack.getCount(4));
+    	
+    	assertEquals(45, stack2.getCount(0));
+    	assertEquals(25, stack2.getCount(1));
+    	assertEquals(35, stack2.getCount(2));
+    	assertEquals(50, stack2.getCount(3));
+    	assertEquals(20, stack2.getCount(4));
+    }
+    
+    public void testGetValue()
+    {
+    	ChipStack stack = new ChipStack(new int[]{50, 10, 2, 2, 4});
+    	
+    	double value = stack.getValue(new double[]{1, 5, 10, 25, 100});
+    	assertEquals(570.0, value);
     	
     }
     

@@ -1,116 +1,116 @@
 package com.cfms.virtualpot.free.test;
 
-import android.test.ActivityInstrumentationTestCase2;
+import junit.framework.TestCase;
 
-import com.cfms.virtualpot.lib.activity.*;
-import com.cfms.virtualpot.lib.game.*;
-import com.cfms.virtualpot.lib.game.ChipStack.Color;
+import com.cfms.virtualpot.lib.game.ChipStack;
+import com.cfms.virtualpot.lib.game.Pot;
+import com.cfms.virtualpot.lib.game.TableStakes;
 
-public class PotManipulationTest extends
-		ActivityInstrumentationTestCase2<PokerActivity> {
+public class PotManipulationTest extends TestCase {
 
-	PokerActivity mActivity;
-	
-	public PotManipulationTest()
-	{
-		super(PokerActivity.class);
-	}
-	
-    @Override
-    protected void setUp() throws Exception {
-    	super.setUp();
-        mActivity = this.getActivity();
-        
+    public void testSplitPotOneWay()
+    {
+    	Pot pot = new Pot(new int[]{50, 10, 2, 2, 4});
+    	ChipStack potCopy = new ChipStack(pot);
+    	TableStakes stakes = new TableStakes();
+    	
+    	ChipStack[] fullPot = pot.splitPot(new int[]{1}, stakes.getChipValues());
+    	
+    	assertEquals(2, fullPot.length);
+    	assertTrue(potCopy.stacksMatch(fullPot[0]));
+    	assertTrue(fullPot[1].stacksMatch(new ChipStack()));
+    	
+    	
+    }
+
+    
+    public void testSplitPotTwoWays()
+    {
+    	Pot pot = new Pot(new int[]{50, 10, 2, 2, 4});
+    	ChipStack halfPot = new ChipStack(new int[]{25, 5, 1, 1, 2});
+    	
+    	TableStakes stakes = new TableStakes();
+    	
+    	ChipStack[] splits = pot.splitPot(new int[]{1, 1}, stakes.getChipValues());
+    	
+    	assertEquals(3, splits.length);
+    	assertTrue(halfPot.stacksMatch(splits[0]));
+    	assertTrue(halfPot.stacksMatch(splits[1]));
+    	assertTrue(splits[2].stacksMatch(new ChipStack()));
+    	
     }
     
-    public void testCreateEmptyPot()
-    {
-    	Pot pot = new Pot(4);
-    	assertEquals(4, pot.getPlayerCount());
-    	for(int i = 0; i < ChipStack.NUM_COLORS; i++)
-    	{
-    		assertEquals(0, pot.getCount(i));
-    		assertEquals(0, pot.getCount(Color.values()[i]));
-    	}
-    }
     
-    public void testAddPlayerChips()
-    {
-    	Pot pot = new Pot(4);
-    	pot.addPlayerChips(0, Color.RED, 15);
-    	assertEquals(15, pot.getCount(Color.RED));
-    	assertEquals(15, pot.getCount(Color.RED, 0));
-    	assertEquals(0, pot.getCount(Color.RED, 1));
-    	assertEquals(0, pot.getCount(Color.RED, 2));
-    	assertEquals(0, pot.getCount(Color.RED, 3));
 
-    	pot.addPlayerChips(1, 0, 10);
-    	pot.addPlayerChips(2, 0,  5);
-    	assertEquals(15, pot.getCount(0));
-    	assertEquals( 0, pot.getCount(0, 0));
-    	assertEquals(10, pot.getCount(0, 1));
-    	assertEquals( 5, pot.getCount(0, 2));
-    	assertEquals( 0, pot.getCount(0, 3));
-    	
-    	ChipStack stack = new ChipStack(new int[]{20, 10, 5, 5, 5});
-    	pot.addPlayerChips(3, stack);
-    	assertTrue(stack.stacksMatch(pot.getPlayerPot(3)));
-    }
-    
-    public void testRemovePlayerChips()
+    public void testSplitPotTwoWaysMismatched()
     {
-    	Pot pot = new Pot(4);
-    	pot.addPlayerChips(0, new ChipStack(new int[]{10, 15, 20, 0, 1}));
+    	Pot pot = new Pot(new int[]{9, 1, 1, 0, 0});
+    	ChipStack halfPot0 = new ChipStack(new int[]{2, 0, 1, 0, 0});
+    	ChipStack halfPot1 = new ChipStack(new int[]{7, 1, 0, 0, 0});
     	
-    	pot.removePlayerChips(0, 0, 8);
-    	assertEquals(2, pot.getCount(0, 0));
-    	//Left with 2, 15, 20, 0, 1
+    	TableStakes stakes = new TableStakes();
+    	
+    	ChipStack[] splits = pot.splitPot(new int[]{1, 1}, stakes.getChipValues());
+    	
+    	assertEquals(3, splits.length);
+    	assertTrue(halfPot0.stacksMatch(splits[0]));
+    	assertTrue(halfPot1.stacksMatch(splits[1]));
+    	assertTrue(splits[2].stacksMatch(new int[]{0, 0, 0, 0, 0}));
+    	
+    }
 
-    	pot.removePlayerChips(0, Color.RED, 7);
-    	assertEquals(8, pot.getCount(Color.RED, 0));
-    	//Left with 2, 8, 20, 0, 1
+    public void testSplitPotTwoWaysOdd()
+    {
+    	Pot pot = new Pot(new int[]{5, 10, 2, 2, 4});
+    	ChipStack halfPot = new ChipStack(new int[]{2, 5, 1, 1, 2});
     	
-    	pot.removePlayerChips(0, new ChipStack(new int[]{2, 8, 20, 0, 1}));
-    	assertTrue((new ChipStack()).stacksMatch(pot.getPlayerPot(0)));
+    	TableStakes stakes = new TableStakes();
+    	
+    	ChipStack[] splits = pot.splitPot(new int[]{1, 1}, stakes.getChipValues());
+    	
+    	assertEquals(3, splits.length);
+    	assertTrue(halfPot.stacksMatch(splits[0]));
+    	assertTrue(halfPot.stacksMatch(splits[1]));
+    	assertTrue(splits[2].stacksMatch(new int[]{1, 0, 0, 0, 0}));
+    	
     }
     
-    public void testGetPlayerStack()
+    public void testSplitPotThreeWays()
     {
-    	Pot pot = new Pot(2);
-    	pot.addPlayerChips(0, Color.WHITE, 10);
-    	pot.addPlayerChips(0, Color.RED, 15);
-    	pot.addPlayerChips(1, Color.WHITE, 25);
-    	pot.addPlayerChips(1, Color.RED, 12);
-    	ChipStack stack0 = pot.getPlayerPot(0);
-    	ChipStack stack1 = pot.getPlayerPot(1);
+    	Pot pot = new Pot(new int[]{6, 14, 3, 3, 6});
+    	ChipStack halfPot0 = new ChipStack(new int[]{0, 5, 1, 1, 2});
+    	ChipStack halfPot1 = new ChipStack(new int[]{0, 5, 1, 1, 2});
+    	ChipStack halfPot2 = new ChipStack(new int[]{5, 4, 1, 1, 2});
     	
-    	assertTrue(new ChipStack(new int[]{10, 15, 0, 0, 0}).stacksMatch(stack0));
-    	assertTrue(new ChipStack(new int[]{25, 12, 0, 0, 0}).stacksMatch(stack1));
+    	TableStakes stakes = new TableStakes();
     	
-    	//Test for shallow copy
-    	assertSame(stack0, pot.getPlayerPot(0));
-    	stack0.AddChips(2, 10);
-    	assertEquals(10, pot.getPlayerPot(0).getCount(2));
+    	ChipStack[] splits = pot.splitPot(new int[]{1, 1, 1}, stakes.getChipValues());
+    	
+    	assertEquals(4, splits.length);
+    	assertTrue(halfPot0.stacksMatch(splits[0]));
+    	assertTrue(halfPot1.stacksMatch(splits[1]));
+    	assertTrue(halfPot2.stacksMatch(splits[2]));
+    	assertTrue(splits[3].stacksMatch(new int[]{1, 0, 0, 0, 0}));	
     }
     
-    public void testGetPlayerStackCopy()
+    public void testSplitPotThreeWaysWeighted()
     {
-    	Pot pot = new Pot(2);
-    	pot.addPlayerChips(0, Color.WHITE, 10);
-    	pot.addPlayerChips(0, Color.RED, 15);
-    	pot.addPlayerChips(1, Color.WHITE, 25);
-    	pot.addPlayerChips(1, Color.RED, 12);
-    	ChipStack stack0 = pot.getPlayerPotCopy(0);
-    	ChipStack stack1 = pot.getPlayerPotCopy(1);
+    	Pot pot = new Pot(new int[]{50, 10, 4, 4, 8});
+    	ChipStack halfPot0 = new ChipStack(new int[]{20, 6, 2, 2, 4});
+    	ChipStack halfPot1 = new ChipStack(new int[]{15, 2, 1, 1, 2});
+    	ChipStack halfPot2 = new ChipStack(new int[]{15, 2, 1, 1, 2});
     	
-    	assertTrue(new ChipStack(new int[]{10, 15, 0, 0, 0}).stacksMatch(stack0));
-    	assertTrue(new ChipStack(new int[]{25, 12, 0, 0, 0}).stacksMatch(stack1));
+    	TableStakes stakes = new TableStakes();
     	
-    	//Test for shallow copy
-    	assertNotSame(stack0, pot.getPlayerPotCopy(0));
-    	stack0.AddChips(2, 10);
-    	assertFalse(10 == pot.getPlayerPotCopy(0).getCount(2));
+    	ChipStack[] splits = pot.splitPot(new int[]{2, 1, 1}, stakes.getChipValues());
+    	
+    	assertEquals(4, splits.length);
+    	assertTrue(halfPot0.stacksMatch(splits[0]));
+    	assertTrue(halfPot1.stacksMatch(splits[1]));
+    	assertTrue(halfPot2.stacksMatch(splits[2]));
+    	assertTrue(splits[3].stacksMatch(new int[]{0, 0, 0, 0, 0}));	
     }
+    
     
     
 }
