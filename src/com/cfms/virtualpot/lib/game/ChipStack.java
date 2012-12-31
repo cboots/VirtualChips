@@ -72,7 +72,7 @@ public class ChipStack {
 	}
 
 	public int getCount(Color c) {
-		return mChips[c.ordinal()];
+		return getCount(c.ordinal());
 	}
 
 	public int getCount(int idx) {
@@ -119,7 +119,7 @@ public class ChipStack {
 		
 		for(int i = 0; i < NUM_COLORS; i++)
 		{
-			value += chipVals[i]*mChips[i];
+			value += chipVals[i]*getCount(i);
 		}
 		
 		return value;
@@ -151,7 +151,7 @@ public class ChipStack {
 	
 	public void makeChange(double[] chipVals, int breakCidx)
 	{
-		makeChange(chipVals, breakCidx, mChips[breakCidx]);
+		makeChange(chipVals, breakCidx, getCount(breakCidx));
 	}
 	
 	public void makeChange(double[] chipVals, Color breakColor, int quantity)
