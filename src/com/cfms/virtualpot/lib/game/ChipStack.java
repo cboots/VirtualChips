@@ -186,5 +186,14 @@ public class ChipStack {
 		}
 	}
 	
+	public int getCount()
+	{
+		int sum = 0;
+		for(int i = 0; i< NUM_COLORS;i++)
+		{
+			sum += mChips[i];
+		}
+		return sum;
+	}
 	
 }
