@@ -2,7 +2,7 @@ package com.cfms.virtualpot.lib.game;
 
 import java.util.List;
 
-public class Game {
+public abstract class Game {
 
 	TableStakes mStakes = null;
 	Pot mMainPot = null;

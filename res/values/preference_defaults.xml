@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Test resources used by testing framework-->
+    <bool name="test_default_bool_true">true</bool>
+    <bool name="test_default_bool_false">false</bool>
+    
+    <!-- Actual values -->
+    <bool name="flurry_enabled">true</bool>
+</resources>
