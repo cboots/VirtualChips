@@ -1,4 +1,4 @@
-package com.cfms.virtualpot.lib.game;
+package com.cfms.virtualpot.lib.graphics;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,19 +9,19 @@ import android.view.SurfaceView;
 /*
  * Manages game graphics and 
  */
-public class Table extends SurfaceView  implements SurfaceHolder.Callback {
+public class TableView extends SurfaceView  implements SurfaceHolder.Callback {
 	
-	public Table(Context context) {
+	public TableView(Context context) {
 		super(context);
 		setup();
 	}
 
-	public Table(Context context, AttributeSet attrs) {
+	public TableView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		// TODO Auto-generated constructor stub
 	}
 
-	public Table(Context context, AttributeSet attrs, int defStyle) {
+	public TableView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		// TODO Auto-generated constructor stub
 	}

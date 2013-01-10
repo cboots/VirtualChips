@@ -105,7 +105,7 @@ public class MultiTouchActivity extends BaseActivity implements OnTouchListener 
 					if (!recentTouchedViewsIndex[actionPointerID]
 							.contains(view)) {
 						recentTouchedViewsIndex[actionPointerID].add(view);
-					}
+					} 
 				} else if (moveOutsideEnabledViews.contains(view)) {
 					DebugLog.V("tag", "outside but gets event");
 					recentTouchedViewsIndex[actionPointerID].add(view);
