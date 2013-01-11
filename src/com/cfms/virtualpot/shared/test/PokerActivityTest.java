@@ -1,4 +1,4 @@
-package com.cfms.virtualpot.free.test;
+package com.cfms.virtualpot.shared.test;
 
 import android.test.ActivityInstrumentationTestCase2;
 import com.cfms.virtualpot.lib.activity.PokerActivity;

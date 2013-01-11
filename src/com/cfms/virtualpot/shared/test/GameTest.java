@@ -1,4 +1,4 @@
-package com.cfms.virtualpot.free.test;
+package com.cfms.virtualpot.shared.test;
 
 import junit.framework.TestCase;
 import android.test.ActivityInstrumentationTestCase2;
