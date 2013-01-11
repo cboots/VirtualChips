@@ -1,5 +1,10 @@
 package com.cfms.virtualpot.lib.activity;
 
+/*
+ * Based almost entirely on code from http://www.passsy.de/multitouch-for-all-views/
+ */
+
+
 import java.util.ArrayList;
 
 import android.os.Bundle;
